@@ -15,6 +15,38 @@ class Program:
 	def delay(t = 1):
 		time.sleep(t)
 
+	def passwordIsValid(password, confirmation):
+		if password == confirmation:
+			if len(password) >= 10:
+				return True
+
+	def makeMasterPassword():
+		print("  lets get started")
+		input("\nreturn key to continue: ")
+		Program.clear()
+		while True:
+			print("  make a unique and memorizable password")
+			print("password:")
+			input_make_password = input(">>")
+			print("confirmation:")
+			input_confirmation_password = input(">>")
+			while True:
+				input_continue = input("continue?(Y/N): ").upper()
+				if (input_continue == "N") or (input_continue == "Y"):
+					break
+				print("invalid input.")
+			if (input_continue == "Y"):
+				if (Program.passwordIsValid(input_make_password, input_confirmation_password)):
+					master_password_database.write(encrypt(input_make_password))
+					print("welcome")
+					input("\nreturn key to continue: ")
+					Program.quit()
+				else:
+					Program.clear()
+					print("invalid password.")
+			elif (input_continue == "N"):
+				Program.quit()
+
 	def readLines(database_file):
 		lines_database = database_file.readlines()
 		line_list = []
@@ -77,6 +109,9 @@ url_list        = Program.readLines(url_database)
 master_password = Program.readLines(master_password_database)
 
 Program.clear()
+
+if master_password == []:
+	Program.makeMasterPassword()
 
 while True:
 	master_password_input = input("enter master password: ")
