@@ -13,11 +13,11 @@ Instructions:
 
 commands:
 1. /d = go to the "display" page
-2.   /d = displays your saved information when you're inside the /d page
-3.   // = back a page
-4.   /n = makes a new slot
-5.     /r = makes a randomly generated password
-6.   /c = clears the program
-7.   /q = quits the program
+2. | /d = displays your saved information when you're inside the /d page
+3. | // = back a page
+4. | /n = makes a new slot
+5. | | /r = makes a randomly generated password
+6. | /c = clears the program
+7. | /q = quits the program
 8. /c = clears the window
 9. /q = quits the program
