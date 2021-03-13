@@ -1,6 +1,5 @@
 # Importing all the modules
 import os
-import sys
 import time
 import pyperclip
 from encrypter import encrypt
@@ -31,6 +30,10 @@ def program(in_program):
 		def restart(user_state):
 			program(user_state)
 
+		# Tells the user that by tying "/i" will display all the commands
+		def infoHelp():
+			print(" [type '/i' for help]")
+
 		# Reads a line of a file
 		def readLines(database_file):
 			lines_database = database_file.readlines()
@@ -50,6 +53,22 @@ def program(in_program):
 			if master_password[0] == "":
 				return True
 			return False
+
+		# Displays the commands to the user
+		def info():
+			print()
+			print(" +----------+")
+			print(" | commands |")
+			print(" +----------+----------------------------+")
+			print(" |  /d = display page                    |")
+			print(" |    /d = displays your saved passwords |")
+			print(" |    /n = makes a new password          |")
+			print(" |      /r = generates a random password |")
+			print(" |    // = goes 1 page back              |")
+			print(" |  /q = ends the program                |")
+			print(" |  /c = clears the screen               |")
+			print(" +---------------------------------------+")
+			print()
 
 		# Making a master password
 		def makeMasterPassword():
@@ -134,13 +153,15 @@ def program(in_program):
 					print("action cancelled.")
 					break
 
-
+	# The main program
 	def main():
-		while True:													# /n = makes a new slot
-				user_input = input("h]>>")								# /c = clears the window
-				if user_input == "/d":									# /q = quits the program
-					Program.clear()										# /r = generates a random password
+		while True:
+				Program.infoHelp()
+				user_input = input("h]>>")
+				if user_input == "/d":
+					Program.clear()
 					while True:
+						Program.infoHelp()
 						user_input = input("h]d]>>")
 						if user_input == "//":
 							Program.clear()
@@ -152,11 +173,15 @@ def program(in_program):
 							Program.newSlot()
 						elif user_input == "/c":
 							Program.clear()
+						elif user_input == "/i":
+							Program.info()
 						elif user_input == "/q":
 							Program.save()
 							Program.quit()
 						else:
 							print("invalid input. Try again")
+				elif user_input == "/i":
+					Program.info()
 				elif user_input == "/c":
 					Program.clear()
 				elif user_input == "/q":
