@@ -70,7 +70,7 @@ class Program:
 	# Writes a line to a file
 	def writeLine(file, line):
 		written_line = file.write(encrypt(line) + "\n")
-		return written_line
+		return 
 
 	# Displays all of the slots/info
 	def display():
