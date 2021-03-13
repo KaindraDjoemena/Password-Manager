@@ -41,8 +41,6 @@ class Program:
 
 	# Checking if the 2 lines of the .txt file is "\n"
 	def masterPasswordIsEmpty(master_password):
-		print(master_password)
-		print(master_password[0])
 		if master_password[0] == "":
 			return True
 		return False
@@ -65,6 +63,7 @@ class Program:
 				print("invalid input.")
 			if (input_continue == "Y"):
 				if (Program.passwordIsValid(input_make_password, input_confirmation_password)):
+					# Overwrites the database with ""
 					master_password_database = open("master_password_database.txt", "w")
 					username_database        = open("username_database.txt", "w")
 					password_database        = open("password_database.txt", "w")
