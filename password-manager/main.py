@@ -25,11 +25,27 @@ class Program:
 	def copy(x):
 		pyperclip.copy(x)
 
+	# Reads a line of a file
+	def readLines(database_file):
+		lines_database = database_file.readlines()
+		line_list = []
+		for line in lines_database:
+			line_list.append(line.strip("\n"))
+		return line_list
+
 	# Checking if the newly made password is valid or not
 	def passwordIsValid(password, confirmation):
 		if password == confirmation:
 			if len(password) >= 10:
 				return True
+
+	# Checking if the 2 lines of the .txt file is "\n"
+	def masterPasswordIsEmpty(master_password):
+		print(master_password)
+		print(master_password[0])
+		if master_password[0] == "":
+			return True
+		return False
 
 	# Making a new password
 	def makeMasterPassword():
@@ -49,7 +65,12 @@ class Program:
 				print("invalid input.")
 			if (input_continue == "Y"):
 				if (Program.passwordIsValid(input_make_password, input_confirmation_password)):
-					master_password_database.write(encrypt(input_make_password)) # Encrypts the password
+					master_password_database = open("master_password_database.txt", "w")
+					username_database        = open("username_database.txt", "w")
+					password_database        = open("password_database.txt", "w")
+					website_database         = open("website_database.txt", "w")
+					url_database             = open("url_database.txt", "w")
+					master_password_database.write((encrypt(input_make_password)) + "\n") # Encrypts the password
 					print("welcome")
 					input("\nreturn key to continue: ")
 					Program.quit()
@@ -59,18 +80,9 @@ class Program:
 			elif (input_continue == "N"):
 				Program.quit()
 
-	# Reads a line of a file
-	def readLines(database_file):
-		lines_database = database_file.readlines()
-		line_list = []
-		for line in lines_database:
-			line_list.append(line.strip("\n"))
-		return line_list
-
 	# Writes a line to a file
 	def writeLine(file, line):
 		written_line = file.write(encrypt(line) + "\n")
-		return 
 
 	# Displays all of the slots/info
 	def display():
@@ -131,7 +143,7 @@ master_password = Program.readLines(master_password_database)
 Program.clear()
 
 # If there is no master password/if its a new account, then we call the makeMasterPassword() method
-if master_password == []:
+if Program.masterPasswordIsEmpty(master_password):
 	Program.makeMasterPassword()
 
 # Loops forever
