@@ -52,6 +52,7 @@ class Program:
 		Program.clear()
 		while True:
 			print("  make a unique and memorizable password")
+			print("  the password should be more than 10 characters long")
 			print("password:")
 			input_make_password = input(">>")
 			print("confirmation:")
