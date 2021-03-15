@@ -1,6 +1,6 @@
 # Password-Manager
 A password managing program that manages your password by storing your information like website name, username, url, and password.
-Information of the user is stored in .txt files. All info are encrypted (with a simple encryption process).
+User master password is hashed and all data is encrypted.
 This requires the user to only know 1 unique password to access this program.
 
 Instructions:
