@@ -1,0 +1,8 @@
+HOW TO SETUP THE PROGRAM:
+1. Extract the file
+2. Go to the folder "Password-manager"
+3. Run the file "main"
+4. Follow along with the setup process
+5. The program will automatically close itself after you're done making the password
+6. Re-run the file "main"
+7. Enter your master password type "/i" for help on the commands
