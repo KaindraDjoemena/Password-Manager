@@ -191,9 +191,6 @@ def program(in_program):
 					print("action cancelled.")
 					break
 	
-	# Makes key_dict global
-	global key_dict
-	key_dict = Program.openEncKey()
 
 	# The main program
 	def main():
@@ -236,6 +233,9 @@ def program(in_program):
 	# If there is no master password/if its a new account, then we call the makeMasterPassword() method
 	if Program.masterPasswordIsEmpty(master_password):
 		Program.makeMasterPassword()
+	elif not Program.masterPasswordIsEmpty(master_password):
+		global key_dict
+		key_dict = Program.openEncKey()
 
 	# Checks whether the user is starting the program or is in the program but just want to restart it
 	if not in_program:
