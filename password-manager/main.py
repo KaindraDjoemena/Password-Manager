@@ -1,6 +1,7 @@
 # Importing all the modules
 import os
 import time
+import hashlib
 import pyperclip
 from encrypter import encrypt
 from decrypter import decrypt
@@ -25,6 +26,11 @@ def program(in_program):
 		# Copies x
 		def copy(x):
 			pyperclip.copy(x)
+
+		def hash(password):
+			result = hashlib.sha512(password.encode())
+			hashed_password = result.hexdigest()
+			return hashed_password
 
 		# Restarts the program
 		def restart(user_state):
@@ -60,11 +66,9 @@ def program(in_program):
 			print(" +----------+")
 			print(" | commands |")
 			print(" +----------+----------------------------+")
-			print(" |  /d = display page                    |")
-			print(" |    /d = displays your saved passwords |")
-			print(" |    /n = makes a new password          |")
-			print(" |      /r = generates a random password |")
-			print(" |    // = goes 1 page back              |")
+			print(" |  /d = displays your saved passwords   |")
+			print(" |  /n = makes a new password            |")
+			print(" |    /r = generates a random password   |")
 			print(" |  /q = ends the program                |")
 			print(" |  /c = clears the screen               |")
 			print(" +---------------------------------------+")
@@ -95,7 +99,7 @@ def program(in_program):
 						password_database        = open("password_database.txt", "w")
 						website_database         = open("website_database.txt", "w")
 						url_database             = open("url_database.txt", "w")
-						master_password_database.write((encrypt(input_make_password)) + "\n") # Encrypts the password
+						master_password_database.write((Program.hash(input_make_password)) + "\n") # Encrypts the password
 						print("welcome")
 						input("\nreturn key to continue: ")
 						Program.quit()
@@ -146,6 +150,8 @@ def program(in_program):
 					else:
 						Program.writeLine(password_database, password_input)
 					print("action successful.")
+					print("password copied to clipboard")
+					input("return to continue: ")
 					Program.save() # < Saves the new info
 					Program.restart(True) # < Goes straight into the program again without having to re-enter the password
 					break
@@ -155,35 +161,19 @@ def program(in_program):
 
 	# The main program
 	def main():
+		Program.infoHelp()
 		while True:
-				Program.infoHelp()
-				user_input = input("h]>>")
+				user_input = input(">>")
 				if user_input == "/d":
-					Program.clear()
-					while True:
-						Program.infoHelp()
-						user_input = input("h]d]>>")
-						if user_input == "//":
-							Program.clear()
-							break
-						elif user_input == "/d":
-							print()
-							Program.display()
-						elif user_input == "/n":
-							Program.newSlot()
-						elif user_input == "/c":
-							Program.clear()
-						elif user_input == "/i":
-							Program.info()
-						elif user_input == "/q":
-							Program.save()
-							Program.quit()
-						else:
-							print("invalid input. Try again")
+					print()
+					Program.display()
+				elif user_input == "/n":
+					Program.newSlot()
 				elif user_input == "/i":
 					Program.info()
 				elif user_input == "/c":
 					Program.clear()
+					Program.infoHelp()
 				elif user_input == "/q":
 					Program.save()
 					Program.quit()
@@ -215,7 +205,7 @@ def program(in_program):
 	if not in_program:
 		while True:
 			master_password_input = input("enter master password: ")
-			if encrypt(master_password_input) == master_password[0]:
+			if Program.hash(master_password_input) == master_password[0]:
 				Program.clear()
 				main()
 			else:
