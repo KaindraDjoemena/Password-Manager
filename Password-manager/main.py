@@ -37,6 +37,20 @@ def program(in_program):
 			hashed_password = result.hexdigest()
 			return hashed_password
 
+		# Generates a random password
+		def generatePassword(length = 30):
+			random_string = generatePassword(length)
+			return random_string
+
+		# Salts the input "x" and stores the salt in a file
+		def salt(x):
+			random_string = Program.generatePassword(5)
+			salt_file = open("salt.txt", "w")
+			salt_file.write(random_string) # < Stores the salt in a .txt file
+			salt_file.close()
+			salted_pass = (x + random_string)
+			return salted_pass
+
 		# Makes the encryption key and pickles it
 		def makeKey():
 			key = crypto.makeKey()
@@ -127,7 +141,8 @@ def program(in_program):
 						password_database        = open("password_database.txt", "w")
 						website_database         = open("website_database.txt", "w")
 						url_database             = open("url_database.txt", "w")
-						master_password_database.write((Program.hash(input_make_password)) + "\n") # Encrypts the password
+						salted_password = Program.salt(input_make_password)
+						master_password_database.write((Program.hash(salted_password)) + "\n") # Encrypts the password
 						print("welcome")
 						input("\nreturn key to continue: ")
 						Program.makeKey()
@@ -178,7 +193,7 @@ def program(in_program):
 					Program.writeLine(url_database, url_input, key_dict)
 					Program.writeLine(username_database, username_input, key_dict)
 					if password_input == "/r":
-						Program.writeLine(password_database, generatePassword(), key_dict)
+						Program.writeLine(password_database, Program.generatePassword(), key_dict)
 					else:
 						Program.writeLine(password_database, password_input, key_dict)
 					print("action successful.")
@@ -221,7 +236,7 @@ def program(in_program):
 	website_database         = open("website_database.txt", "r+")
 	url_database             = open("url_database.txt", "r+")
 
-	# Read the lines
+	# Reads the lines
 	username_list   = Program.readLines(username_database)
 	password_list   = Program.readLines(password_database)
 	website_list    = Program.readLines(website_database)
@@ -233,6 +248,7 @@ def program(in_program):
 	# If there is no master password/if its a new account, then we call the makeMasterPassword() method
 	if Program.masterPasswordIsEmpty(master_password):
 		Program.makeMasterPassword()
+	# Loads/unpickles the encryption key when they're a returnin user
 	elif not Program.masterPasswordIsEmpty(master_password):
 		global key_dict
 		key_dict = Program.openEncKey()
@@ -241,7 +257,9 @@ def program(in_program):
 	if not in_program:
 		while True:
 			master_password_input = input("enter master password: ")
-			if Program.hash(master_password_input) == master_password[0]:
+			with open("salt.txt", "r") as salt_database: # < Opens the "salt.txt" file
+				salt = Program.readLines(salt_database)  # < Assings the salt list of the file to the variable salt
+			if Program.hash(master_password_input + salt[0]) == master_password[0]:
 				Program.clear()
 				main()
 			else:
