@@ -28,8 +28,9 @@ def program(in_program):
 			time.sleep(t)
 
 		# Copies x
-		def copy(x):
+		def copy(x, data):
 			pyperclip.copy(x)
+			print(data + " copied to clipboard")
 
         # Hashes the password with SHA512
 		def hash(password):
@@ -80,7 +81,7 @@ def program(in_program):
 
 		# Tells the user that by tying "/i" will display all the commands
 		def infoHelp():
-			print(" [type '/i' for help]")
+			print(" [type 'help' for help]")
 
 		# Reads a line of a file
 		def readLines(database_file):
@@ -102,18 +103,65 @@ def program(in_program):
 				return True
 			return False
 
+		# The user can copy the data
+		def copyData():
+			# Makes the search easier
+			website_upper_list = [Program.decrypt(web, key_dict).upper() for web in website_list]
+			username_upper_list = [Program.decrypt(username, key_dict).upper() for username in username_list]
+
+			# Asks for the data
+			while True:
+				website_input = input("website name: ").upper()	
+				username_input = input("username for the website: ").upper()
+				index = website_upper_list.index(website_input)
+				if website_input not in website_upper_list or username_upper_list[index] != username_input:
+					print("username or website not listed")
+					confirmation = input("retry?(Y/N): ").upper()
+					if confirmation == "Y":
+						continue
+					elif confirmation == "N":
+						program(True)
+				elif website_input in website_upper_list and username_upper_list[index] == username_input:
+					break
+			
+			# The user can copy any aspect of the specified data
+			while True:
+				copy_input = input(" copy: ")
+				if copy_input == "website":
+					Program.copy(Program.decrypt(website_list[index], key_dict), "website name")
+					break
+				elif copy_input == "username":
+					Program.copy(Program.decrypt(username_list[index],  key_dict), "username")
+					break
+				elif copy_input == "url":
+					Program.copy(Program.decrypt(url_list[index], key_dict), "url")
+					break
+				elif copy_input == "password":
+					Program.copy(Program.decrypt(password[index], key_dict), "password")
+					break
+				elif copy_input == "back":
+					break
+				elif copy_input == "quit":
+					Program.quit()
+
 		# Displays the commands to the user
 		def info():
 			print()
 			print(" +----------+")
 			print(" | commands |")
-			print(" +----------+----------------------------+")
-			print(" |  /d = displays your saved passwords   |")
-			print(" |  /n = makes a new password            |")
-			print(" |    /r = generates a random password   |")
-			print(" |  /q = ends the program                |")
-			print(" |  /c = clears the screen               |")
-			print(" +---------------------------------------+")
+			print(" +----------+-----------------------------------+")
+			print(" |  >'display' = displays your saved passwords  |")
+			print(" |  >'new' = makes a new password               |")
+			print(" |   +>'random' = generates a random password   |")
+			print(" |  >'copy' = copies the specified info         |")
+			print(" |   +>'website' = copies the website name      |")
+			print(" |   +>'url' = copies the url                   |")
+			print(" |   +>'username' = copies the username         |")
+			print(" |   +>'password' = copies the password         |")
+			print(" |   +>'back'= goes back a page                 |")
+			print(" |  >'quit' = ends the program                  |")
+			print(" |  >'clear' = clears the screen                |")
+			print(" +----------------------------------------------+")
 			print()
 
 		# Making a master password
@@ -192,15 +240,14 @@ def program(in_program):
 					Program.writeLine(website_database, website_input, key_dict)
 					Program.writeLine(url_database, url_input, key_dict)
 					Program.writeLine(username_database, username_input, key_dict)
-					if password_input == "/r":
+					if password_input == "random":
 						password = Program.generatePassword()
 						Program.writeLine(password_database, password, key_dict)
 					else:
 						password = password_input
 						Program.writeLine(password_database, password, key_dict)
-					Program.copy(password)
+					Program.copy(password, "password")
 					print("action successful.")
-					print("password copied to clipboard")
 					input("return to continue: ")
 					Program.save() # < Saves the new info
 					Program.restart(True) # < Goes straight into the program again without having to re-enter the password
@@ -214,22 +261,24 @@ def program(in_program):
 	def main():
 		Program.infoHelp()
 		while True:
-				user_input = input(">>")
-				if user_input == "/d":
-					print()
-					Program.display()
-				elif user_input == "/n":
-					Program.newSlot()
-				elif user_input == "/i":
-					Program.info()
-				elif user_input == "/c":
-					Program.clear()
-					Program.infoHelp()
-				elif user_input == "/q":
-					Program.save()
-					Program.quit()
-				else:
-					print("invalid command")
+			user_input = input(">>")
+			if user_input == "display":
+				print()
+				Program.display()
+			elif user_input == "new":
+				Program.newSlot()
+			elif user_input == "help":
+				Program.info()
+			elif user_input == "copy":
+				Program.copyData()
+			elif user_input == "clear":
+				Program.clear()
+				Program.infoHelp()
+			elif user_input == "quit":
+				Program.save()
+				Program.quit()
+			else:
+				print("invalid command")
 
 
 	# Opens the files
