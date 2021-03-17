@@ -30,7 +30,7 @@ def program(in_program):
 		# Copies x
 		def copy(x, data):
 			pyperclip.copy(x)
-			print(data + " copied to clipboard")
+			print(data + " copied to clipboard.")
 
         # Hashes the password with SHA512
 		def hash(password):
@@ -94,7 +94,7 @@ def program(in_program):
 		# Checking if the newly made password is valid or not
 		def passwordIsValid(password, confirmation):
 			if password == confirmation:
-				if len(password) >= 10:
+				if len(password) >= 15:
 					return True
 
 		# Checking if the 2 lines of the .txt file is "\n"
@@ -103,8 +103,8 @@ def program(in_program):
 				return True
 			return False
 
-		# The user can copy the data
-		def copyData():
+		# This method asks the user to specify the slot they want
+		def specify():
 			# Makes the search easier
 			website_upper_list = [Program.decrypt(web, key_dict).upper() for web in website_list]
 			username_upper_list = [Program.decrypt(username, key_dict).upper() for username in username_list]
@@ -122,7 +122,11 @@ def program(in_program):
 					elif confirmation == "N":
 						program(True)
 				elif website_input in website_upper_list and username_upper_list[index] == username_input:
-					break
+					return index
+
+		# The user can copy the data
+		def copyData():
+			index = Program.specify()
 			
 			# The user can copy any aspect of the specified data
 			while True:
@@ -139,10 +143,53 @@ def program(in_program):
 				elif copy_input == "password":
 					Program.copy(Program.decrypt(password[index], key_dict), "password")
 					break
+				elif copy_input == "clear" or "cls":
+					Program.clear()
 				elif copy_input == "back":
 					break
 				elif copy_input == "quit":
 					Program.quit()
+
+		# This method deletes the saved slot's data by specifying
+		def deleteData():
+			index = Program.specify()
+
+			print()
+			Program.display("single", index) # < Displays a specific info
+
+			while True:
+				delete_input = input(" delete?(Y/N): ").upper()
+				if delete_input == "Y":
+
+					# Deletes the element of the specified info by their index
+					website_list.pop(index)
+					url_list.pop(index)
+					username_list.pop(index)
+					password_list.pop(index)
+
+					# Overwrites the existing list with the new popped list
+					with open("website_database.txt", "w") as w:
+						for web in website_list:
+							w.write(web + "\n")
+					with open("url_database.txt", "w") as u:
+						for url in url_list:
+							u.write(url + "\n")
+					with open("username_database.txt", "w") as user:
+						for username in website_list:
+							user.write(username + "\n")
+					with open("password_database.txt", "w") as p:
+						for password in password_list:
+							p.write(password + "\n")
+
+					# Changes the mode from "w" to "r+" to avoid accidental overwriting
+					master_password_database = open("master_password_database.txt", "r+")
+					username_database        = open("username_database.txt", "r+")
+					password_database        = open("password_database.txt", "r+")
+					website_database         = open("website_database.txt", "r+")
+					url_database             = open("url_database.txt", "r+")
+					break
+				elif delete_input == "N":
+					break
 
 		# Displays the commands to the user
 		def info():
@@ -159,6 +206,7 @@ def program(in_program):
 			print(" |   +>'username' = copies the username         |")
 			print(" |   +>'password' = copies the password         |")
 			print(" |   +>'back'= goes back a page                 |")
+			print(" |  >'delete; = deletes the specified info      |")
 			print(" |  >'quit' = ends the program                  |")
 			print(" |  >'clear' = clears the screen                |")
 			print(" +----------------------------------------------+")
@@ -201,15 +249,21 @@ def program(in_program):
 				elif (input_continue == "N"):
 					Program.quit()
 
-
 		# Writes a line to a file
 		def writeLine(file, line, key_dict):
 			written_line = file.write(Program.encrypt(line, key_dict) + "\n")
 
 		# Displays all of the slots/info
-		def display():
-			for line in range(len(website_list)):
-				# Decrypts the encrypted password
+		def display(mode, line = None):
+			if mode == "loop":
+				for line in range(len(website_list)):
+					# Decrypts the encrypted password
+					print(" website  : {}".format(Program.decrypt(website_list[line], key_dict)))
+					print(" url      : {}".format(Program.decrypt(url_list[line], key_dict)))
+					print(" username : {}".format(Program.decrypt(username_list[line], key_dict)))
+					print(" password : {}".format(Program.decrypt(password_list[line], key_dict)))
+					print()
+			elif mode == "single":
 				print(" website  : {}".format(Program.decrypt(website_list[line], key_dict)))
 				print(" url      : {}".format(Program.decrypt(url_list[line], key_dict)))
 				print(" username : {}".format(Program.decrypt(username_list[line], key_dict)))
@@ -247,13 +301,13 @@ def program(in_program):
 						password = password_input
 						Program.writeLine(password_database, password, key_dict)
 					Program.copy(password, "password")
-					print("action successful.")
+					print("action successful.\n")
 					input("return to continue: ")
 					Program.save() # < Saves the new info
 					Program.restart(True) # < Goes straight into the program again without having to re-enter the password
 					break
 				elif confirmation == "N":
-					print("action cancelled.")
+					print("action cancelled.\n")
 					break
 	
 
@@ -261,17 +315,19 @@ def program(in_program):
 	def main():
 		Program.infoHelp()
 		while True:
-			user_input = input(">>")
+			user_input = input(">>").lower()
 			if user_input == "display":
 				print()
-				Program.display()
+				Program.display("loop")
 			elif user_input == "new":
 				Program.newSlot()
 			elif user_input == "help":
 				Program.info()
 			elif user_input == "copy":
 				Program.copyData()
-			elif user_input == "clear":
+			elif user_input == "delete":
+				Program.deleteData()
+			elif (user_input == "clear") or (user_input == "cls"):
 				Program.clear()
 				Program.infoHelp()
 			elif user_input == "quit":
@@ -319,5 +375,4 @@ def program(in_program):
 	elif in_program:
 		main()
 
-# Calls the function and says that the user is starting it
-program(False)
+program(False) # < Calls the function and says that the user is starting it
