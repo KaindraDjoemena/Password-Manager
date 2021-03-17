@@ -193,9 +193,12 @@ def program(in_program):
 					Program.writeLine(url_database, url_input, key_dict)
 					Program.writeLine(username_database, username_input, key_dict)
 					if password_input == "/r":
-						Program.writeLine(password_database, Program.generatePassword(), key_dict)
+						password = Program.generatePassword()
+						Program.writeLine(password_database, password, key_dict)
 					else:
-						Program.writeLine(password_database, password_input, key_dict)
+						password = password_input
+						Program.writeLine(password_database, password, key_dict)
+					Program.copy(password)
 					print("action successful.")
 					print("password copied to clipboard")
 					input("return to continue: ")
