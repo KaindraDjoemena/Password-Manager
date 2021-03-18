@@ -111,12 +111,12 @@ def program(in_program):
 
 			# Asks for the data
 			while True:
-				website_input = input("website name: ").upper()	
-				username_input = input("username for the website: ").upper()
+				website_input = input(" website name: ").upper()	
+				username_input = input(" username for the website: ").upper()
 				index = website_upper_list.index(website_input)
 				if website_input not in website_upper_list or username_upper_list[index] != username_input:
-					print("username or website not listed")
-					confirmation = input("retry?(Y/N): ").upper()
+					print(" username or website not listed.")
+					confirmation = input(" retry?(Y/N): ").upper()
 					if confirmation == "Y":
 						continue
 					elif confirmation == "N":
@@ -187,6 +187,7 @@ def program(in_program):
 					password_database        = open("password_database.txt", "r+")
 					website_database         = open("website_database.txt", "r+")
 					url_database             = open("url_database.txt", "r+")
+					print("action successful.")
 					break
 				elif delete_input == "N":
 					break
