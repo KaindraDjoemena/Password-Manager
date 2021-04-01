@@ -111,18 +111,27 @@ def program(in_program):
 
 			# Asks for the data
 			while True:
-				website_input = input(" website name: ").upper()	
+				website_input = input(" website name: ").upper()
 				username_input = input(" username for the website: ").upper()
-				index = website_upper_list.index(website_input)
-				if website_input not in website_upper_list or username_upper_list[index] != username_input:
+				if website_input not in website_upper_list:
 					print(" username or website not listed.")
 					confirmation = input(" retry?(Y/N): ").upper()
-					if confirmation == "Y":
-						continue
-					elif confirmation == "N":
-						program(True)
-				elif website_input in website_upper_list and username_upper_list[index] == username_input:
-					return index
+						if confirmation == "Y":
+							continue
+						elif confirmation == "N":
+							program(True)
+				elif website_input in website_upper_list:
+					while True:
+						index = website_upper_list.index(website_input)					
+						if website_input not in website_upper_list or username_input not in username_upper_list or username_upper_list[index] != username_input:
+							print(" username or website not listed.")
+							confirmation = input(" retry?(Y/N): ").upper()
+							if confirmation == "Y":
+								continue
+							elif confirmation == "N":
+								program(True)
+						elif (website_input in website_upper_list) and (username_upper_list[index] == username_input):
+							return index
 
 		# The user can copy the data
 		def copyData():
@@ -175,7 +184,7 @@ def program(in_program):
 						for url in url_list:
 							u.write(url + "\n")
 					with open("username_database.txt", "w") as user:
-						for username in website_list:
+						for username in username_list:
 							user.write(username + "\n")
 					with open("password_database.txt", "w") as p:
 						for password in password_list:
