@@ -116,10 +116,10 @@ def program(in_program):
 				if website_input not in website_upper_list:
 					print(" username or website not listed.")
 					confirmation = input(" retry?(Y/N): ").upper()
-						if confirmation == "Y":
-							continue
-						elif confirmation == "N":
-							program(True)
+					if confirmation == "Y":
+						continue
+					elif confirmation == "N":
+						program(True)
 				elif website_input in website_upper_list:
 					while True:
 						index = website_upper_list.index(website_input)					
